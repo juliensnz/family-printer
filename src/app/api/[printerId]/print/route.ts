@@ -1,6 +1,12 @@
 import {db, storage} from '@/app/lib/firebase/backend';
 
-const GET = async (_request: Request, {params: {printerId}}: {params: {printerId: string}}) => {
+const GET = async (_request: Request, props: {params: Promise<{printerId: string}>}) => {
+  const params = await props.params;
+
+  const {
+    printerId
+  } = params;
+
   const posts = await db.collection('printers').doc(printerId).collection('posts').where('printed', '==', false).get();
   const bucket = storage.bucket();
 
