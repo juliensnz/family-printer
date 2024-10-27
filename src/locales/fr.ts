@@ -1,4 +1,7 @@
 export default {
-  'post.create': 'Créer un article',
-  'post.description': 'Envoyez un article à {printerId}',
+  'post.create': 'Hey Claudie et Marco!',
+  'post.description': `Aujourd'hui, nous avons...`,
+  'post.open': 'Créer un article',
+  'post.cancel.confirm': 'Êtes-vous sûr de vouloir annuler?',
+  'post.image.add': 'Ajouter une photo',
 } as const;

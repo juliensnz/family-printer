@@ -4,14 +4,18 @@ import {UserId} from '@/domain/model/User';
 type ImageBlock = {
   type: 'image';
   url: string;
-}
+};
 
 type TextBlock = {
   type: 'text';
   content: string;
-}
+};
+type TitleBlock = {
+  type: 'title';
+  content: string;
+};
 
-type Block = ImageBlock | TextBlock
+type Block = ImageBlock | TextBlock | TitleBlock;
 
 type PostId = string;
 
@@ -21,7 +25,7 @@ type Post = {
   userId: UserId;
   date: number;
   printed: boolean;
-  blocks: Block[]
+  blocks: Block[];
 };
 
-export type {Post}
+export type {Post};
