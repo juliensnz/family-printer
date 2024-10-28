@@ -20,10 +20,12 @@ import {
   DrawerDescription,
   DrawerFooter,
 } from '@/components/ui/drawer';
+import {Separator} from '@/components/ui/separator';
+
 import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {useI18n} from '@/locales/client';
 import {ChangeEvent, ChangeEventHandler, useActionState, useEffect, useState} from 'react';
-import {ImagePlus, Plus} from 'lucide-react';
+import {ImagePlus, LoaderCircle, Plus, Send} from 'lucide-react';
 import {cn} from '@/lib/utils';
 import {createPost} from '@/app/[locale]/[printerId]/create/_actions/createPost';
 
@@ -31,7 +33,7 @@ const CreateButton = ({className, ...props}: {className?: string}) => {
   const t = useI18n();
 
   return (
-    <Button variant="outline" className={cn('group rounded-full fixed bottom-5 right-5', className)} {...props}>
+    <Button variant="outline" className={cn('group rounded-full fixed bottom-3 right-3', className)} {...props}>
       <Plus className="h-4 w-4" />
       {t('post.open')}
     </Button>
@@ -43,6 +45,7 @@ const TitleInput = ({value, onChange}: {value: string; onChange: ChangeEventHand
 
   return (
     <input
+      required
       name="title"
       value={value}
       onChange={onChange}
@@ -50,6 +53,15 @@ const TitleInput = ({value, onChange}: {value: string; onChange: ChangeEventHand
       type="text"
       placeholder={t('post.create')}
     />
+  );
+};
+
+const LoadingButton = ({loading}: {loading: boolean}) => {
+  return (
+    <Button type={loading ? 'button' : 'submit'}>
+      {loading ? <LoaderCircle className="animate-spin" /> : <Send />}
+      Submit
+    </Button>
   );
 };
 
@@ -67,7 +79,7 @@ const ImageInput = () => {
   };
 
   return (
-    <div className="mb-4">
+    <div className="mb-4 mt-2">
       <label htmlFor={id} className="flex w-full align-middle justify-center">
         {preview ? (
           <img alt="test" src={preview} className="max-h-72 rounded" />
@@ -94,7 +106,7 @@ const CreatePost = ({printerId}: {printerId: string}) => {
   const t = useI18n();
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery('(min-width: 768px)');
-  const [state, formAction] = useActionState(createPost, {title: '', description: '', saved: false});
+  const [state, formAction, loading] = useActionState(createPost, {title: '', description: '', saved: false});
   const [formData, setFormData] = useState({title: '', description: ''});
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -130,10 +142,11 @@ const CreatePost = ({printerId}: {printerId: string}) => {
                   onChange={handleChange}
                 />
               </DialogDescription>
+              <Separator />
               <ImageInput />
             </DialogHeader>
             <input type="hidden" name="printerId" value={printerId} />
-            <Button type="submit">Submit</Button>
+            <LoadingButton loading={loading} />
           </form>
         </DialogContent>
       </Dialog>
@@ -159,11 +172,12 @@ const CreatePost = ({printerId}: {printerId: string}) => {
                 value={formData.description}
               />
             </DrawerDescription>
+            <Separator />
             <ImageInput />
           </DrawerHeader>
           <input type="hidden" name="printerId" value={printerId} />
           <DrawerFooter className="pt-2">
-            <Button type="submit">Submit</Button>
+            <LoadingButton loading={loading} />
           </DrawerFooter>
         </form>
       </DrawerContent>

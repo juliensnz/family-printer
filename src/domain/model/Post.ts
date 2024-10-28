@@ -22,7 +22,11 @@ type PostId = string;
 type Post = {
   id: PostId;
   printerId: PrinterId;
-  userId: UserId;
+  author: {
+    id: UserId;
+    name: string;
+    avatar: string;
+  };
   date: number;
   printed: boolean;
   blocks: Block[];

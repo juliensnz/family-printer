@@ -1,42 +1,17 @@
 'use server';
 
-import {db} from '@/app/lib/firebase/backend';
-import {Post} from '@/domain/model/Post';
-import {Viewport} from 'next';
+import {CreatePost} from '@/app/[locale]/[printerId]/components/CreatePost/CreatePost';
+import {ListPosts} from '@/app/[locale]/[printerId]/components/ListPosts/ListPosts';
 
-export const viewport: Viewport = {
-  themeColor: 'white',
-  userScalable: false,
-  viewportFit: 'cover',
-  maximumScale: 1,
-  initialScale: 1,
-  width: 'device-width',
-};
+const Page = async (props: {params: Promise<{printerId: string}>}) => {
+  const params = await props.params;
 
-const getPosts = async (): Promise<Post[]> => {
-  const documents = await db.collection('posts').get();
-
-  return documents.docs.map(doc => {
-    return {
-      id: doc.id,
-      ...doc.data(),
-    } as Post;
-  });
-};
-
-const Page = async () => {
-  const posts = await getPosts();
+  const {printerId} = params;
 
   return (
     <div>
-      <h1>Printer Page</h1>
-      <div>
-        {posts.map(post => (
-          <div key={post.id}>
-            <h2>{post.id}</h2>
-          </div>
-        ))}
-      </div>
+      <ListPosts printerId={printerId} />
+      <CreatePost printerId={printerId} />
     </div>
   );
 };

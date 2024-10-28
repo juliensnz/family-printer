@@ -21,7 +21,11 @@ const createPost = async (previousState: object, formData: FormData) => {
   const newPost: Post = {
     id: postUUID,
     printerId,
-    userId: 'julien',
+    author: {
+      id: 'julien',
+      name: 'Julien Sanchez',
+      avatar: 'https://lh3.googleusercontent.com/ogw/AF2bZyjBMTyqWOXsmPNgs-t8tNmzOJI60CobClc0WKkVyiKmGw1f=s64-c-mo',
+    },
     date: Date.now(),
     printed: false,
     blocks: [

@@ -34,7 +34,7 @@ const Textarea = ({
   return (
     <textarea
       name={name}
-      className="outline-none w-full text-base touch-manipulation mb-4"
+      className="outline-none w-full text-base touch-manipulation h-6"
       style={{resize: 'none', fontSize: '16px !important'}}
       ref={ref}
       placeholder={placeholder}
