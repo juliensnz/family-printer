@@ -3,9 +3,7 @@ import {db, storage} from '@/app/lib/firebase/backend';
 const GET = async (_request: Request, props: {params: Promise<{printerId: string}>}) => {
   const params = await props.params;
 
-  const {
-    printerId
-  } = params;
+  const {printerId} = params;
 
   const posts = await db.collection('printers').doc(printerId).collection('posts').where('printed', '==', false).get();
   const bucket = storage.bucket();
@@ -26,7 +24,8 @@ const GET = async (_request: Request, props: {params: Promise<{printerId: string
   return Response.json(prints);
 };
 
-const PUT = async (request: Request, {params: {printerId}}: {params: {printerId: string}}) => {
+const PUT = async (request: Request, {params}: {params: Promise<{printerId: string}>}) => {
+  const {printerId} = await params;
   const printId = (await request.json()).id;
 
   await db.collection('printers').doc(printerId).collection('posts').doc(printId).set({printed: true}, {merge: true});

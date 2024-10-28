@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import {Card, CardHeader, CardTitle, CardContent, CardFooter} from '@/components/ui/card';
 import {Post} from '@/domain/model/Post';
 import {Avatar, AvatarImage, AvatarFallback} from '@radix-ui/react-avatar';
