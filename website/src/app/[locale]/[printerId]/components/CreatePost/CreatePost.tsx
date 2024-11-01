@@ -105,7 +105,7 @@ const ImageInput = ({onChange}: {onChange: () => void}) => {
   );
 };
 
-const CreatePost = ({printerId}: {printerId: string}) => {
+const CreatePost = ({printerId, locale}: {printerId: string; locale: string}) => {
   const t = useI18n();
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery('(min-width: 768px)');
@@ -149,6 +149,7 @@ const CreatePost = ({printerId}: {printerId: string}) => {
               <ImageInput onChange={() => {}} />
             </DialogHeader>
             <input type="hidden" name="printerId" value={printerId} />
+            <input type="hidden" name="locale" value={locale} />
             <SubmitButton loading={loading} />
           </form>
         </DialogContent>
@@ -191,6 +192,7 @@ const CreatePost = ({printerId}: {printerId: string}) => {
             />
           </DrawerHeader>
           <input type="hidden" name="printerId" value={printerId} />
+          <input type="hidden" name="locale" value={locale} />
           <DrawerFooter className="pt-2">
             <SubmitButton loading={loading} />
           </DrawerFooter>

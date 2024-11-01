@@ -2,6 +2,7 @@
 import {db, storage} from '@/app/lib/firebase/backend';
 import {Post} from '@/domain/model/Post';
 import {randomUUID} from 'crypto';
+import {revalidatePath} from 'next/cache';
 
 const createPost = async (previousState: object, formData: FormData) => {
   const postUUID = randomUUID();
@@ -10,6 +11,7 @@ const createPost = async (previousState: object, formData: FormData) => {
   const title = formData.get('title') as string;
   const description = formData.get('description') as string;
   const printerId = formData.get('printerId') as string;
+  const locale = formData.get('locale') as string;
 
   const fileUUID = randomUUID();
   const fileUrl = `printers/${printerId}/posts/${postUUID}/images/${fileUUID}`;
@@ -39,6 +41,8 @@ const createPost = async (previousState: object, formData: FormData) => {
   };
 
   await db.collection('printers').doc(printerId).collection('posts').doc(postUUID).set(newPost);
+
+  revalidatePath(`/${locale}/${printerId}`);
 
   return {
     ...previousState,
