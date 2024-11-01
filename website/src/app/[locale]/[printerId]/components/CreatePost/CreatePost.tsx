@@ -19,11 +19,10 @@ import {
   DrawerDescription,
   DrawerFooter,
 } from '@/components/ui/drawer';
-import {Separator} from '@/components/ui/separator';
 
 import {useMediaQuery} from '@/hooks/useMediaQuery';
 import {useI18n} from '@/locales/client';
-import {ChangeEvent, ChangeEventHandler, useActionState, useEffect, useState} from 'react';
+import {ChangeEvent, ChangeEventHandler, useActionState, useEffect, useRef, useState} from 'react';
 import {ImagePlus, LoaderCircle, Plus, Send} from 'lucide-react';
 import {cn} from '@/lib/utils';
 import {createPost} from '@/app/[locale]/[printerId]/create/_actions/createPost';
@@ -32,9 +31,13 @@ const CreateButton = ({className, ...props}: {className?: string}) => {
   const t = useI18n();
 
   return (
-    <Button variant="outline" className={cn('group rounded-full fixed bottom-3 right-3', className)} {...props}>
-      <Plus className="h-4 w-4" />
-      {t('post.open')}
+    <Button
+      variant="outline"
+      className={cn('group rounded-full fixed bottom-3 right-3 p-7 flex gap-4', className)}
+      {...props}
+    >
+      <Plus className="scale-150" />
+      <span className="text-xl">{t('post.open')}</span>
     </Button>
   );
 };
@@ -55,7 +58,7 @@ const TitleInput = ({value, onChange}: {value: string; onChange: ChangeEventHand
   );
 };
 
-const LoadingButton = ({loading}: {loading: boolean}) => {
+const SubmitButton = ({loading}: {loading: boolean}) => {
   return (
     <Button type={loading ? 'button' : 'submit'}>
       {loading ? <LoaderCircle className="animate-spin" /> : <Send />}
@@ -64,7 +67,7 @@ const LoadingButton = ({loading}: {loading: boolean}) => {
   );
 };
 
-const ImageInput = () => {
+const ImageInput = ({onChange}: {onChange: () => void}) => {
   const [id] = useState(() => Math.random().toString(36).substring(7));
   const t = useI18n();
   const [preview, setPreview] = useState<string | null>(null);
@@ -74,6 +77,7 @@ const ImageInput = () => {
     if (file) {
       const previewUrl = URL.createObjectURL(file);
       setPreview(previewUrl);
+      onChange();
     }
   };
 
@@ -107,6 +111,7 @@ const CreatePost = ({printerId}: {printerId: string}) => {
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const [state, formAction, loading] = useActionState(createPost, {title: '', description: '', saved: false});
   const [formData, setFormData] = useState({title: '', description: ''});
+  const ref = useRef<HTMLDivElement>(null);
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const {name, value} = event.target;
@@ -127,7 +132,7 @@ const CreatePost = ({printerId}: {printerId: string}) => {
         <DialogTrigger asChild>
           <CreateButton />
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px]" ref={ref}>
           <form action={formAction}>
             <DialogHeader>
               <DialogTitle>
@@ -141,11 +146,10 @@ const CreatePost = ({printerId}: {printerId: string}) => {
                   onChange={handleChange}
                 />
               </DialogDescription>
-              <Separator />
-              <ImageInput />
+              <ImageInput onChange={() => {}} />
             </DialogHeader>
             <input type="hidden" name="printerId" value={printerId} />
-            <LoadingButton loading={loading} />
+            <SubmitButton loading={loading} />
           </form>
         </DialogContent>
       </Dialog>
@@ -157,7 +161,7 @@ const CreatePost = ({printerId}: {printerId: string}) => {
       <DrawerTrigger asChild>
         <CreateButton />
       </DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent ref={ref}>
         <form action={formAction}>
           <DrawerHeader className="text-left">
             <DrawerTitle>
@@ -171,12 +175,24 @@ const CreatePost = ({printerId}: {printerId: string}) => {
                 value={formData.description}
               />
             </DrawerDescription>
-            <Separator />
-            <ImageInput />
+            <ImageInput
+              onChange={() => {
+                setTimeout(() => {
+                  let height = 0;
+
+                  ref.current?.childNodes.forEach(node => {
+                    if (node instanceof HTMLElement) {
+                      height += node.getBoundingClientRect().height;
+                    }
+                  });
+                  ref.current?.style.setProperty('height', `${height + 20}px`);
+                }, 100);
+              }}
+            />
           </DrawerHeader>
           <input type="hidden" name="printerId" value={printerId} />
           <DrawerFooter className="pt-2">
-            <LoadingButton loading={loading} />
+            <SubmitButton loading={loading} />
           </DrawerFooter>
         </form>
       </DrawerContent>

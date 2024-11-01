@@ -12,4 +12,13 @@ const getPosts = async (printerId: string): Promise<Post[]> => {
   });
 };
 
-export {getPosts};
+const getPost = async (printerId: string, postId: string): Promise<Post> => {
+  const document = await db.collection('printers').doc(printerId).collection('posts').doc(postId).get();
+
+  return {
+    id: document.id,
+    ...document.data(),
+  } as Post;
+};
+
+export {getPosts, getPost};

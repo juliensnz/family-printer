@@ -16,12 +16,11 @@ const printerCreator = (printerName: string, serverUrl: string) => {
       for (const print of prints) {
         console.log(`Printing print ${print.id} for printer ${printerName}: ${print.url}`);
 
-        await fetch(`${serverUrl}/api/${printerName}/print`, {
+        await fetch(`${serverUrl}/api/${printerName}/print/${print.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({id: print.id}),
         });
       }
     },

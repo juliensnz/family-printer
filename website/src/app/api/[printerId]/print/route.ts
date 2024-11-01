@@ -24,13 +24,4 @@ const GET = async (_request: Request, props: {params: Promise<{printerId: string
   return Response.json(prints);
 };
 
-const PUT = async (request: Request, {params}: {params: Promise<{printerId: string}>}) => {
-  const {printerId} = await params;
-  const printId = (await request.json()).id;
-
-  await db.collection('printers').doc(printerId).collection('posts').doc(printId).set({printed: true}, {merge: true});
-
-  return new Response(null, {status: 201});
-};
-
-export {GET, PUT};
+export {GET};
