@@ -13,8 +13,9 @@ const convertImageForThermalPrinter = async (base64Image: string): Promise<strin
 
       img.onload = () => {
         // Calculate height maintaining aspect ratio
+        const crop = 90;
         const targetWidth = 600;
-        const croppedHeight = img.height - 90;
+        const croppedHeight = img.height - crop;
         const aspectRatio = croppedHeight / img.width;
         const targetHeight = Math.round(targetWidth * aspectRatio);
 
@@ -30,7 +31,7 @@ const convertImageForThermalPrinter = async (base64Image: string): Promise<strin
         ctx.drawImage(
           img,
           0,
-          90, // Start copying from x=0, y=90 in source image
+          crop, // Start copying from x=0, y=90 in source image
           img.width,
           croppedHeight, // Use full width, but reduce height by 90px
           0,
