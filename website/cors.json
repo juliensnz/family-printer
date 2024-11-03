@@ -1,0 +1,7 @@
+[
+  {
+    "origin": ["https://family-printer.vercel.app/", "http://localhost:3000", "http://localhost:3001", "http://192.168.1.22:3001"],
+    "method": ["GET"],
+    "maxAgeSeconds": 3600
+  }
+]

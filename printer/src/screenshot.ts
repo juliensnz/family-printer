@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer-core';
 
-async function takeScreenshot(url: string) {
+const takeScreenshot = async (url: string) => {
   try {
     // Launch browser with specific args needed for Raspberry Pi
     const browser = await puppeteer.launch({
@@ -26,6 +26,7 @@ async function takeScreenshot(url: string) {
       deviceScaleFactor: 2,
     });
 
+    console.log(`Taking a screenshot of: ${url}`);
     // Navigate to URL
     await page.goto(url, {
       waitUntil: 'networkidle0',
@@ -39,20 +40,16 @@ async function takeScreenshot(url: string) {
     }
 
     // Take screenshot
-    const image = await postToPrint.screenshot({
-      // fullPage: true,
-    });
+    const image = await postToPrint.screenshot({});
 
     // Close browser
     await browser.close();
 
-    return image;
+    return Buffer.from(image);
   } catch (error) {
     console.error('Error taking screenshot:', error);
     throw error;
   }
-}
+};
 
-const image = await takeScreenshot('http://localhost:3001/en/guidel/81157975-6e71-460b-a894-0fb8491b203d?print=true');
-
-await Deno.writeFile('screenshot.png', image);
+export {takeScreenshot};

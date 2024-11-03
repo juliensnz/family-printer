@@ -6,6 +6,7 @@
   "dependencies": {
     "@point-of-sale/receipt-printer-encoder": "^3.0.2",
     "@point-of-sale/system-receipt-printer": "^2.0.0",
+    "dotenv": "^16.4.5",
     "escpos": "^3.0.0-alpha.6",
     "escpos-usb": "^3.0.0-alpha.4",
     "puppeteer-core": "^23.6.1",
@@ -13,8 +14,7 @@
     "ts-node": "^10.9.2"
   },
   "scripts": {
-    "print": "ts-node print.ts",
-    "dither": "ts-node dither.ts"
+    "print": "ts-node index.ts"
   },
   "resolutions": {
     "usb": "^1.9.2"

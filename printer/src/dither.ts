@@ -7,7 +7,7 @@ interface Pixel {
   a: number;
 }
 
-const convertImageForThermalPrinter = async (inputBuffer: Buffer): Promise<Buffer> => {
+const ditherImage = async (inputBuffer: Buffer): Promise<Buffer> => {
   return new Promise<Buffer>(async (resolve, reject) => {
     try {
       // Load the image and convert to raw pixel data
@@ -119,7 +119,4 @@ const convertImageForThermalPrinter = async (inputBuffer: Buffer): Promise<Buffe
   });
 };
 
-const inputFile = await Deno.readFile('screenshot.png');
-const outputBuffer = await convertImageForThermalPrinter(inputFile);
-
-await Deno.writeFile('processed2.png', outputBuffer);
+export {ditherImage};
