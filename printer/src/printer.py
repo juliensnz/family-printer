@@ -44,7 +44,7 @@ def publish(path: str, vendor_id: Optional[int] = None, product_id: Optional[int
         image = Image.open(path)
 
         # Configure printer settings
-        device.set(align='LEFT')
+        # device.set(align='LEFT')
 
         # Print the image
         print("Printing image...")

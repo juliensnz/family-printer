@@ -1,9 +1,9 @@
 import {takeScreenshot} from './src/screenshot';
 import {ditherImage} from './src/dither';
 import {saveImage} from './src/fs';
-import {publish} from './src/printer';
 import {getPrints, acknowledgePrint} from './src/prints';
 import {config} from 'dotenv';
+import {publish} from './src/printer';
 
 config();
 

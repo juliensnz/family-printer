@@ -1,9 +1,11 @@
+import {executeCommand} from './command';
+
 const escpos = require('escpos');
 // install escpos-usb adapter module manually
 escpos.USB = require('escpos-usb');
 // Select the adapter based on your printer type
 
-const publish = (path: string) => {
+const macOSpublish = (path: string) => {
   const device = new escpos.USB(0x00, 0x05);
   // const device  = new escpos.Network('localhost');
   // const device  = new escpos.Serial('/dev/usb/lp0');
@@ -23,6 +25,20 @@ const publish = (path: string) => {
         });
     });
   });
+};
+
+const linuxPublish = async (path: string) => {
+  await executeCommand(`python src/printer.py ${path}`);
+};
+
+const publish = (path: string) => {
+  if (process.platform === 'darwin') {
+    macOSpublish(path);
+  }
+
+  if (process.platform === 'linux') {
+    linuxPublish(path);
+  }
 };
 
 export {publish};

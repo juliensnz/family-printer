@@ -13,7 +13,7 @@ const takeScreenshot = async (url: string) => {
       ],
       channel: 'chrome',
       // Needed for Raspberry Pi
-      // executablePath: '/usr/bin/chromium-browser',
+      executablePath: process.platform === 'linux' ? '/usr/bin/chromium-browser' : undefined,
     });
 
     // Create a new page
@@ -21,7 +21,7 @@ const takeScreenshot = async (url: string) => {
 
     // Set viewport size
     await page.setViewport({
-      width: 300,
+      width: 280,
       height: 0,
       deviceScaleFactor: 2,
     });
