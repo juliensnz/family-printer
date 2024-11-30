@@ -1,8 +1,6 @@
-import * as admin from "firebase-admin";
+import * as admin from 'firebase-admin';
 
-const serviceAccount = JSON.parse(
-  process.env.FIREBASE_SERVICE_ACCOUNT_KEY as string
-);
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY as string);
 
 if (!admin.apps.length) {
   admin.initializeApp({
@@ -14,4 +12,4 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 const storage = admin.storage();
 
-export { db, storage };
+export {db, storage};
