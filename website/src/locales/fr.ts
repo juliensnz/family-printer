@@ -3,7 +3,7 @@ export default {
   'post.description': `Aujourd'hui, nous avons... {printerId}`,
   'post.open': 'Créer un article',
   'post.cancel_confirm': 'Êtes-vous sûr de vouloir annuler?',
-  'post.image_add': 'Ajouter une photo',
+  'post.image.add': 'Ajouter une photo',
   'error.logging_in': 'Erreur de connexion',
   'error.logging_in_with_google': 'Erreur de connexion avec Google',
   'error.signing_up': "Erreur d'inscription",
