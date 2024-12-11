@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
-    "module": "commonjs"
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "rootDir": "./",
+    "outDir": "./build/"
   }
 }

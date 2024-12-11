@@ -7,14 +7,15 @@
     "dotenv": "^16.4.5",
     "puppeteer-core": "^23.6.1",
     "sharp": "^0.33.5",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "tsc": "^2.0.4"
   },
   "optionalDependencies": {
     "escpos": "^3.0.0-alpha.6",
     "escpos-usb": "^3.0.0-alpha.4"
   },
   "scripts": {
-    "print": "ts-node index.ts"
+    "print": "git pull; yarn install; yarn tsc -p .tsconfig.json; node ./build/index.js"
   },
   "resolutions": {
     "usb": "^1.9.2"
