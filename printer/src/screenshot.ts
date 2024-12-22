@@ -10,7 +10,13 @@ const takeScreenshot = async (url: string) => {
         '--disable-dev-shm-usage',
         '--disable-accelerated-2d-canvas',
         '--disable-gpu',
+        '--no-first-run',
+        '--no-zygote',
+        '--single-process',
+        '--start-fullscreen',
       ],
+      headless: true,
+      timeout: 60000,
       channel: 'chrome',
       // Needed for Raspberry Pi
       executablePath: process.platform === 'linux' ? '/usr/bin/chromium-browser' : undefined,
@@ -30,14 +36,16 @@ const takeScreenshot = async (url: string) => {
     // Navigate to URL
     await page.goto(url, {
       waitUntil: 'networkidle0',
-      timeout: 30000,
+      timeout: 60000,
     });
 
-    const postToPrint = await page.waitForSelector('.post-to-print', {timeout: 10000});
+    const postToPrint = await page.waitForSelector('.post-to-print', {timeout: 60000});
 
     if (!postToPrint) {
       throw new Error('Could not find post-to-print element');
     }
+
+    await wait(30000);
 
     // Take screenshot
     const image = await postToPrint.screenshot({});
@@ -51,5 +59,10 @@ const takeScreenshot = async (url: string) => {
     throw error;
   }
 };
+
+const wait = async (ms: number) =>
+  new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
 
 export {takeScreenshot};
