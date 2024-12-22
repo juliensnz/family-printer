@@ -15,7 +15,8 @@
     "escpos-usb": "^3.0.0-alpha.4"
   },
   "scripts": {
-    "print": "git pull; yarn install; yarn tsc -p .tsconfig.json; node ./build/index.js"
+    "update": "git pull; yarn install; yarn tsc -p .tsconfig.json",
+    "print": "node ./build/index.js"
   },
   "resolutions": {
     "usb": "^1.9.2"
