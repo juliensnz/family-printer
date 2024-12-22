@@ -32,13 +32,14 @@ const linuxPublish = async (path: string) => {
 };
 
 const publish = (path: string) => {
-  if (process.platform === 'darwin') {
-    macOSpublish(path);
-  }
+  macOSpublish(path);
+  // if (process.platform === 'darwin') {
+  //   macOSpublish(path);
+  // }
 
-  if (process.platform === 'linux') {
-    linuxPublish(path);
-  }
+  // if (process.platform === 'linux') {
+  //   linuxPublish(path);
+  // }
 };
 
 export {publish};
