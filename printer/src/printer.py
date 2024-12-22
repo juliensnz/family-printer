@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-print("=== STARTING SCRIPT ===")  # Basic startup confirmation
+print("=== STARTING SCRIPT ===")
 
 import argparse
 import usb.core
@@ -22,20 +22,44 @@ def find_printer() -> Optional[Tuple[int, int]]:
     print("Searching for printer...")
     # Find all USB devices
     devices = usb.core.find(find_all=True)
+    if not devices:
+        print("No USB devices found at all!")
+        return None
 
+    print("Listing all USB devices:")
     for device in devices:
         vendor_id = device.idVendor
         product_id = device.idProduct
-        print(f"Found device: vendor_id={hex(vendor_id)}, product_id={hex(product_id)}")
+        print(f"Device found: vendor_id={hex(vendor_id)}, product_id={hex(product_id)}")
+
+        # Get more device info
+        try:
+            manufacturer = usb.util.get_string(device, device.iManufacturer)
+            product = usb.util.get_string(device, device.iProduct)
+            print(f"  Manufacturer: {manufacturer}")
+            print(f"  Product: {product}")
+        except:
+            print("  Could not get device strings")
 
         if vendor_id == 0x1fc9 and product_id == 0x2016:
             print("Found matching printer!")
-            if device.is_kernel_driver_active(0):
-                try:
+            try:
+                # Check device configuration
+                cfg = device.get_active_configuration()
+                print(f"Active configuration: {cfg}")
+
+                # List endpoints
+                for intf in cfg:
+                    print(f"Interface {intf.bInterfaceNumber}:")
+                    for ep in intf:
+                        print(f"  Endpoint {ep.bEndpointAddress:02x}")
+
+                if device.is_kernel_driver_active(0):
                     print("Attempting to detach kernel driver...")
                     device.detach_kernel_driver(0)
-                except usb.core.USBError as e:
-                    print(f"Could not detach kernel driver: {e}")
+            except Exception as e:
+                print(f"Error during device configuration check: {e}")
+
             return (vendor_id, product_id)
 
     print("No matching printer found")
@@ -46,18 +70,31 @@ def initialize_printer(vendor_id: int, product_id: int, max_retries: int = 3) ->
     for attempt in range(max_retries):
         try:
             print(f"Attempting to initialize printer (attempt {attempt + 1}/{max_retries})...")
+
+            # Add more debugging for device creation
+            print(f"Creating USB device with vendor_id={hex(vendor_id)}, product_id={hex(product_id)}")
             device = Usb(idVendor=vendor_id,
                         idProduct=product_id,
-                        timeout=5000)  # 5 second timeout
+                        timeout=5000,
+                        in_ep=0x81,  # Try explicit endpoints
+                        out_ep=0x01)
+
+            # Test if device is ready
+            print("Testing device connection...")
+            device.text("")  # Send empty text to test connection
+
             print("Printer initialized successfully")
             return device
+
         except Exception as e:
-            print(f"Initialization attempt failed with error: {e}")
+            print(f"Initialization attempt failed with error: {str(e)}")
+            print(f"Error type: {type(e)}")
             if attempt < max_retries - 1:
                 print(f"Waiting 2 seconds before retry...")
                 time.sleep(2)
             else:
-                raise e
+                print("Failed all retry attempts")
+                return None
     return None
 
 def publish(path: str, vendor_id: Optional[int] = None, product_id: Optional[int] = None) -> None:
@@ -82,26 +119,48 @@ def publish(path: str, vendor_id: Optional[int] = None, product_id: Optional[int
         # Load and process the image
         print(f"Loading image from: {path}")
         image = Image.open(path)
-        print(f"Image loaded successfully. Size: {image.size}")
+        print(f"Original image size: {image.size}")
 
-        # Print the image
-        print("Starting to send image to printer...")
-        device.image(image)
-        print("Image sent to printer")
+        # Convert to black and white
+        image = image.convert('1')  # Convert to 1-bit black and white
 
-        # Ensure buffer is cleared before cutting
-        print("Flushing printer buffer...")
-        device.flush()
-        print("Buffer flushed")
+        # Split image into chunks and print each chunk
+        chunk_height = 600  # Adjust this value if needed
+        width, height = image.size
+
+        print(f"Splitting image into chunks of {chunk_height} pixels height")
+        for y_start in range(0, height, chunk_height):
+            # Calculate the height of this chunk (might be smaller for last chunk)
+            current_chunk_height = min(chunk_height, height - y_start)
+
+            # Crop the chunk
+            chunk = image.crop((0, y_start, width, y_start + current_chunk_height))
+            print(f"Printing chunk from y={y_start} to y={y_start + current_chunk_height}")
+
+            try:
+                device.image(chunk, center=False)
+                print(f"Chunk printed successfully")
+
+                # Small delay between chunks to allow printer to catch up
+                time.sleep(0.5)
+
+            except usb.core.USBError as e:
+                print(f"Error printing chunk: {e}")
+                # Try to recover
+                device.close()
+                device = initialize_printer(vendor_id, product_id)
+                if not device:
+                    raise Exception("Failed to recover printer connection")
+                # Retry this chunk
+                device.image(chunk, center=False)
+
+        print("All chunks printed successfully")
 
         # Cut the paper
         print("Sending cut command...")
         device.cut()
         print("Cut command sent")
-        print("Printing completed successfully!")
 
-    except FileNotFoundError:
-        print(f"Error: Image file not found: {path}")
     except Exception as e:
         print(f"Error occurred: {str(e)}")
         print(f"Error type: {type(e)}")
