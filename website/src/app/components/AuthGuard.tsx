@@ -14,8 +14,9 @@ const AuthGuard = ({locale, children}: AuthGuardProps) => {
   const {user, loading} = useAuth();
   const pathname = usePathname();
 
-  const publicPages = [`/${locale}/login`, `/${locale}/signup`];
-  const isPublicPage = publicPages.includes(pathname);
+  const publicPages = [`\/${locale}\/login`, `\/${locale}\/signup`, `\/${locale}\/[a-zA-Z]*\/[0-9a-zA-Z\-]*`];
+
+  const isPublicPage = publicPages.some(pattern => new RegExp(pattern).test(pathname));
 
   if (loading) {
     return (

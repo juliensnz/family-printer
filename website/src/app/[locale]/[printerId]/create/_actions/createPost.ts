@@ -23,6 +23,7 @@ const createPost = async (previousState: object, formData: FormData) => {
   const newPost: Post = {
     id: postUUID,
     printerId,
+    // Todo: fix author
     author: {
       id: 'julien',
       name: 'Julien Sanchez',
