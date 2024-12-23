@@ -50,7 +50,7 @@ def publish(path: str, vendor_id: Optional[int] = None, product_id: Optional[int
         # Print the image
         print("Printing image...")
         time.sleep(2)
-        device.image(image, False, False)
+        device.image(image)
 
         # Cut the paper and close
         time.sleep(2)
@@ -60,8 +60,10 @@ def publish(path: str, vendor_id: Optional[int] = None, product_id: Optional[int
 
     except FileNotFoundError:
         print(f"Error: Image file not found: {path}")
+        device.close()
     except Exception as e:
         print(f"Error occurred: {str(e)}")
+        device.close()
 
 def parse_hex(hex_str: str) -> int:
     """Convert hexadecimal string to integer."""
