@@ -41,8 +41,7 @@ const macOSpublish = async (path: string): Promise<void> => {
 };
 
 const linuxPublish = async (path: string): Promise<void> => {
-  await executeCommand(`echo ${path}`);
-  // await executeCommand(`python src/printer.py ${path}`);
+  await executeCommand(`python src/printer.py ${path}`);
 };
 
 const publish = async (path: string): Promise<void> => {
