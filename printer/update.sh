@@ -2,4 +2,4 @@
 
 # Update the printer
 echo "Updating the printer..."
-yarn update
+yarn --cwd /home/juliensanchez/family-printer/printer/ update

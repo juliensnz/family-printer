@@ -2,4 +2,4 @@
 
 # Print pending images
 echo "printing..."
-yarn print
+yarn --cwd /home/juliensanchez/family-printer/printer/ print
