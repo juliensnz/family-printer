@@ -2,4 +2,4 @@
 
 # Print pending images
 echo "printing..."
-yarn print
+# yarn print
