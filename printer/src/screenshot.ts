@@ -1,6 +1,24 @@
 import puppeteer from 'puppeteer-core';
 
-const takeScreenshot = async (url: string) => {
+const takeLinuxScreenshot = async (url: string) => {
+  const printUrl = `https://api.apiflash.com/v1/urltoimage?access_key=2005ab18953b4b7099c9eefb7565d80f&url=${encodeURIComponent(
+    url
+  )}&format=png&width=280&response_type=image&scale_factor=2&element=%5Bdata-id%5D`;
+
+  console.log(printUrl);
+
+  const response = await fetch(printUrl);
+
+  if (!response.ok) {
+    throw new Error('Failed to take screenshot');
+  }
+
+  const buffer = await response.arrayBuffer();
+
+  return Buffer.from(buffer);
+};
+
+const takeMacOSScreenshot = async (url: string) => {
   try {
     // Launch browser with specific args needed for Raspberry Pi
     const browser = await puppeteer.launch({
@@ -18,8 +36,6 @@ const takeScreenshot = async (url: string) => {
       headless: true,
       timeout: 60000,
       channel: 'chrome',
-      // Needed for Raspberry Pi
-      executablePath: process.platform === 'linux' ? '/usr/bin/chromium-browser' : undefined,
     });
 
     // Create a new page
@@ -64,5 +80,13 @@ const wait = async (ms: number) =>
   new Promise(resolve => {
     setTimeout(resolve, ms);
   });
+
+const takeScreenshot = async (url: string) => {
+  // if (process.platform === 'linux') {
+  return takeLinuxScreenshot(url);
+  // }
+
+  // return takeMacOSScreenshot(url);
+};
 
 export {takeScreenshot};
