@@ -15,7 +15,7 @@ const GET = async (request: Request, props: {params: Promise<{printerId: string}
       return {
         id: doc.id,
         printerId: doc.data().printerId,
-        printUrl: `${protocol}://${host}/en/${printerId}/${doc.id}?print=true`,
+        printUrl: `${protocol}://${host}/api/${printerId}/print/${doc.id}`,
         ackUrl: `${protocol}://${host}/api/${printerId}/print/${doc.id}`,
       };
     })

@@ -20,7 +20,9 @@ const printerCreator = (printerName: string, serverUrl: string) => {
         console.log(`Printing print ${print.id} for printer ${printerName}`);
         const printPath = `./prints/${print.printerId}_${print.id}.png`;
 
-        const image = await fetch(print.printUrl).then(response => {
+        const image = await fetch(print.printUrl, {
+          redirect: 'follow', // to follow redirects
+        }).then(response => {
           return response.arrayBuffer().then(buffer => Buffer.from(buffer));
         });
 

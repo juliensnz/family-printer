@@ -14,7 +14,7 @@ const getPosts = async (serverUrl: string, printerId: string): Promise<Post[]> =
   return prints as Post[];
 };
 
-const publishImage = async (post: Post, image: Buffer<ArrayBufferLike>) => {
+const publishImage = async (post: Post, image: Buffer) => {
   console.log(`Publishing post ${post.id} for printer ${post.printerId}`, image.byteLength);
 };
 
