@@ -3,7 +3,7 @@ import puppeteer from 'puppeteer-core';
 const takeLinuxScreenshot = async (url: string) => {
   const printUrl = `https://api.apiflash.com/v1/urltoimage?access_key=2005ab18953b4b7099c9eefb7565d80f&url=${encodeURIComponent(
     url
-  )}&format=png&width=300&response_type=image&scale_factor=2&element=%5Bdata-id%5D`;
+  )}&format=png&width=300&response_type=image&scale_factor=1&element=%5Bdata-id%5D`;
 
   console.log(printUrl);
 
@@ -43,7 +43,7 @@ const takeMacOSScreenshot = async (url: string) => {
 
     // Set viewport size
     await page.setViewport({
-      width: 280,
+      width: 300,
       height: 0,
       deviceScaleFactor: 2,
     });

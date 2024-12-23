@@ -50,7 +50,7 @@ def publish(path: str, vendor_id: Optional[int] = None, product_id: Optional[int
         # Print the image
         print("Printing image...")
         time.sleep(2)
-        device.image(image)
+        device.image(image, False, False)
 
         # Cut the paper and close
         time.sleep(2)
