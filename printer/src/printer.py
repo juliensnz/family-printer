@@ -6,6 +6,7 @@ from escpos import printer
 from escpos.printer import Usb
 from PIL import Image
 from typing import Optional, Tuple
+import time
 
 def find_printer() -> Optional[Tuple[int, int]]:
     """
@@ -48,9 +49,11 @@ def publish(path: str, vendor_id: Optional[int] = None, product_id: Optional[int
 
         # Print the image
         print("Printing image...")
+        time.sleep(2)
         device.image(image)
 
         # Cut the paper and close
+        time.sleep(2)
         device.cut()
         device.close()
         print("Printing completed successfully!")
