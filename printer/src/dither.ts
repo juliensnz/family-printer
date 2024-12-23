@@ -39,11 +39,11 @@ const ditherImage = async (inputBuffer: Buffer): Promise<Buffer> => {
         for (let x = 0; x < width; x++) {
           const pixel = pixels[y][x];
 
-          // Convert to grayscale
+          // Convert to grayscale and apply contrast enhancement
           const oldGray = (pixel.r + pixel.g + pixel.b) / 3;
 
-          // Determine new black or white value
-          const newGray = oldGray < 128 ? 0 : 255;
+          // Adjust threshold for higher contrast (changed from 128 to 160)
+          const newGray = oldGray < 160 ? 0 : 255;
 
           // Calculate error
           const error = oldGray - newGray;
@@ -51,32 +51,32 @@ const ditherImage = async (inputBuffer: Buffer): Promise<Buffer> => {
           // Set current pixel to black or white
           pixel.r = pixel.g = pixel.b = newGray;
 
-          // Distribute error to neighboring pixels
+          // Distribute error to neighboring pixels with adjusted weights
           if (x + 1 < width) {
             const right = pixels[y][x + 1];
-            right.r += (error * 7) / 16;
-            right.g += (error * 7) / 16;
-            right.b += (error * 7) / 16;
+            right.r += (error * 8) / 16; // Increased from 7
+            right.g += (error * 8) / 16;
+            right.b += (error * 8) / 16;
           }
 
           if (y + 1 < height) {
             if (x > 0) {
               const bottomLeft = pixels[y + 1][x - 1];
-              bottomLeft.r += (error * 3) / 16;
-              bottomLeft.g += (error * 3) / 16;
-              bottomLeft.b += (error * 3) / 16;
+              bottomLeft.r += (error * 2) / 16; // Decreased from 3
+              bottomLeft.g += (error * 2) / 16;
+              bottomLeft.b += (error * 2) / 16;
             }
 
             const bottom = pixels[y + 1][x];
-            bottom.r += (error * 5) / 16;
-            bottom.g += (error * 5) / 16;
-            bottom.b += (error * 5) / 16;
+            bottom.r += (error * 4) / 16; // Decreased from 5
+            bottom.g += (error * 4) / 16;
+            bottom.b += (error * 4) / 16;
 
             if (x + 1 < width) {
               const bottomRight = pixels[y + 1][x + 1];
-              bottomRight.r += (error * 1) / 16;
-              bottomRight.g += (error * 1) / 16;
-              bottomRight.b += (error * 1) / 16;
+              bottomRight.r += (error * 2) / 16; // Increased from 1
+              bottomRight.g += (error * 2) / 16;
+              bottomRight.b += (error * 2) / 16;
             }
           }
         }
