@@ -45,13 +45,13 @@ const linuxPublish = async (path: string): Promise<void> => {
 };
 
 const publish = async (path: string): Promise<void> => {
-  // if (process.platform === 'darwin') {
-  await macOSpublish(path);
-  // } else if (process.platform === 'linux') {
-  //   await linuxPublish(path);
-  // } else {
-  //   throw new Error('Unsupported platform');
-  // }
+  if (process.platform === 'darwin') {
+    await macOSpublish(path);
+  } else if (process.platform === 'linux') {
+    await linuxPublish(path);
+  } else {
+    throw new Error('Unsupported platform');
+  }
 };
 
 export {publish};

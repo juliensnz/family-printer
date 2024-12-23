@@ -16,7 +16,8 @@
   },
   "scripts": {
     "update": "git pull; yarn install; yarn tsc -p .tsconfig.json",
-    "print": "node ./build/index.js"
+    "print": "node ./build/print.js",
+    "publish": "node ./build/publish.js"
   },
   "resolutions": {
     "usb": "^1.9.2"

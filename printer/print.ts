@@ -1,5 +1,3 @@
-import {takeScreenshot} from './src/screenshot';
-import {ditherImage} from './src/dither';
 import {saveImage} from './src/fs';
 import {getPrints, acknowledgePrint} from './src/prints';
 import {config} from 'dotenv';
@@ -20,10 +18,13 @@ const printerCreator = (printerName: string, serverUrl: string) => {
 
       for (const print of prints) {
         console.log(`Printing print ${print.id} for printer ${printerName}`);
-        const screenshot = await takeScreenshot(print.printUrl);
-        const ditheredScreenshot = await ditherImage(screenshot);
         const printPath = `./prints/${print.printerId}_${print.id}.png`;
-        await saveImage(ditheredScreenshot, printPath);
+
+        const image = await fetch(print.printUrl).then(response => {
+          return response.arrayBuffer().then(buffer => Buffer.from(buffer));
+        });
+
+        await saveImage(image, printPath);
 
         await publish(printPath);
 
