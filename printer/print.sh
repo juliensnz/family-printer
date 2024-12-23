@@ -2,5 +2,5 @@
 
 # Print pending images
 echo "printing... $(date)"
-yarn --cwd /home/juliensanchez/family-printer/printer/ print
+/usr/local/bin/yarn --cwd ./family-printer/printer/ print >> /var/log/printer_print.log 2>&1
 echo "done $(date)"
