@@ -2,8 +2,10 @@ import {getPrinters} from '@/app/actions/printers';
 import {Card, CardHeader, CardTitle, CardContent} from '@/components/ui/card';
 import {LogoutButton} from '@/components/LogoutButton';
 import {getI18n} from '@/locales/server';
+import Link from 'next/link';
 
-const Home = async () => {
+const Home = async (props: {params: Promise<{locale: string}>}) => {
+  const {locale} = await props.params;
   const printers = await getPrinters();
   const t = await getI18n();
 
@@ -16,12 +18,14 @@ const Home = async () => {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {printers.map(printer => (
-          <Card key={printer.id}>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">{printer.name}</CardTitle>
-            </CardHeader>
-            <CardContent></CardContent>
-          </Card>
+          <Link key={printer.id} href={`/${locale}/${printer.id}`}>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">{printer.name}</CardTitle>
+              </CardHeader>
+              <CardContent></CardContent>
+            </Card>
+          </Link>
         ))}
       </div>
     </div>
