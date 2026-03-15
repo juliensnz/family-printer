@@ -22,6 +22,10 @@ const getLocale = (request: NextRequest): string => {
 };
 
 const middleware = (request: NextRequest) => {
+  if (request.headers.has('Next-Action')) {
+    return NextResponse.next();
+  }
+
   const {pathname} = request.nextUrl;
   const locale = getLocale(request);
   const pathPattern = new RegExp(`^(\/((${LOCALES.join('|')})\/).*|\/)$`);
